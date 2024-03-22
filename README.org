@@ -1,0 +1,17 @@
+#+TITLE: CSCI4448 Semester Project
+#+DESCRIPTION: CSCI4448 Semester Project
+#+OPTIONS: toc:nil num:nil
+* Description
+Project Name:
+
+Project Description
+
+Team Members: Sean Shi, Jack Paulman
+
+Language Choice:
+
+Frameworks:
+
+* Features
+** Features
+** Design Patterns
