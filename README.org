@@ -3,23 +3,30 @@
 #+OPTIONS: toc:nil num:nil
 #+BIND: org-latex-title-command "\\begin{center}\\Large %t\\end{center}"
 #+EXPORT_FILE_NAME: resources/proposal
-* Description
-Project Name: Definote
-- Description: A dictionary/notetaking app to allow users to quickly lookup notes/words
+#+LATEX_HEADER: \usepackage{enumitem}
+#+LATEX_HEADER: \setlist{noitemsep}
+* Definote- A dictionary/notetaking app
+A dictionary/notetaking app to allow users to quickly lookup and create entries.
+/Definote/ will be written in Kotlin with the Gradle build system and designed to run on Android version-=<>= and greater.
+/Definote/ will provide a various strategies for users to search through items in the database and also import their own dictionaries.
+A dictionary is an set of entries in the database identified by its name and containing a description and optionally links to other entries.
+/Definote/ will also provide a way for users to create and edit their own entries.
+/Definote/ can be used as a dictionary,
+a simple note taking app, or a lookup system for domain specific information.
 - Team Members: Sean Shi, Jack Paulman
-- Language Choice: Kotlin
-- Frameworks/Libraries: Android Libraries(SQLite database, ...)
+- Frameworks/Libraries: Android Libraries(SQLite database)
 
 * Features
 ** Functional Elements
 - [ ] Search: Allow the user to search through entries to find what they need, use the Strategy pattern for different algorithms.
 - [ ] Database/Dictionary: SQLite
 - [ ] Display: Screen to display user input
-- [ ] Text Renderer: Allow the user to view database entries
-- [ ] Menu: Recent searches, adding new dictionaries?
+- [ ] Text Renderer: Allow the user to view database entries, perform syntax highlighting, emphasis markers, etc.
+- [ ] Menu: Recent searches, adding new dictionaries
 - [ ] Editor: edit entries or add your own entries to the database in a custom dictionary
-** Design Patterns
+** Design Patterns (May include others as needed)
 - [ ] Builder: Build a dictionary from a text file or something similar
 - [ ] Factory: Create dictionary entries
 - [ ] Strategy: Sorting/searching methods for finding entries
 - [ ] Singleton: Single instance of the database
+- [ ] Observer: Can be used for logging and to send notifications for interesting events
