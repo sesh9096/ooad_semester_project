@@ -1,17 +1,24 @@
 #+TITLE: CSCI4448 Semester Project
 #+DESCRIPTION: CSCI4448 Semester Project
 #+OPTIONS: toc:nil num:nil
+#+BIND: org-latex-title-command "\\begin{center}\\Large %t\\end{center}"
 * Description
-Project Name:
-
-Project Description
-
-Team Members: Sean Shi, Jack Paulman
-
-Language Choice:
-
-Frameworks:
+Project Name: Definote
+- Description: A dictionary/notetaking app to allow users to quickly lookup notes/words
+- Team Members: Sean Shi, Jack Paulman
+- Language Choice: Kotlin
+- Frameworks/Libraries: Android Libraries
 
 * Features
-** Features
+** Functional Patterns
+- [ ] Search: Allow the user to search through entries to find what they need, use the Strategy pattern for different algorithms.
+- [ ] Database/Dictionary
+- [ ] Display
+- [ ] Text Renderer
+- [ ] Menu
+- [ ] Editor
 ** Design Patterns
+- [ ] Builder
+- [ ] Factory
+- [ ] Strategy
+- [ ] Singleton
