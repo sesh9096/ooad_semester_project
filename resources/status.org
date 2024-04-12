@@ -9,11 +9,49 @@
 #+LATEX_HEADER: \geometry{margin=0.9in}
 #+LATEX_HEADER: \pagenumbering{gobble}
 * Definote- A dictionary/notetaking app
-- Team Members: Sean Shi, Jack Paulman
+Team Members: Sean Shi, Jack Paulman
 
+Tasks Accomplished:
+- UML diagram (Sean Shi)
+- Layout/UI (Sean Shi)
+- Database
 #+begin_src plantuml :file class-diagram.png
-a -> b
-b -> d
+Interface EntryFilterStrategy {
+	List<Entries> getEntries(input)
+}
+Class Entry{
+	Name
+	Content
+	display()
+}
+Class EntryFactory{
+	makeEntry()
+}
+Class Database{
+	List<Entry> Dictionaries
+	Database getDatabase()
+}
+Class SimpleFilterStrategy {
+	database
+	List<Entries> getEntries(input)
+}
+Class FuzzyFilterStrategy {
+	database
+	List<Entries> getEntries(input)
+}
+Class DummyFilterStrategy {
+	List<Entries> getEntries(input)
+}
+Class MainActivity {
+	List<EntryFilterStrategy> sortingMethods
+}
+SimpleFilterStrategy ..|> EntryFilterStrategy
+FuzzyFilterStrategy ..|> EntryFilterStrategy
+DummyFilterStrategy ..|> EntryFilterStrategy
+SimpleFilterStrategy ..|> Database
+Database --o Entry
+MainActivity --o EntryFilterStrategy
+EntryFactory --> Entry
 #+end_src
 
 #+RESULTS:
