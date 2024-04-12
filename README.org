@@ -13,14 +13,18 @@ A dictionary is an set of entries in the database identified by its name and con
 /Definote/ will also provide a way for users to create and edit their own entries.
 /Definote/ can be used as a dictionary,
 a simple note taking app, or a lookup system for domain specific information.
+
+[[file:resources/Project 7 Update.pdf][Project 7 Report]]
+
 - Team Members: Sean Shi, Jack Paulman
 - Frameworks/Libraries: Android Libraries(SQLite database)
+- BDD Scenarios under =app/src/test/resources/=
 
 * Features
 ** Functional Elements
-- [ ] Search: Allow the user to search through entries to find what they need, use the Strategy pattern for different algorithms.
+- [X] Search: Allow the user to search through entries to find what they need, use the Strategy pattern for different algorithms.
 - [ ] Database/Dictionary: SQLite
-- [ ] Display: Screen to display user input
+- [X] +Display+ Activity: Screen to display user input
 - [ ] Text Renderer: Allow the user to view database entries, perform syntax highlighting, emphasis markers, etc.
 - [ ] Menu: Recent searches, adding new dictionaries
 - [ ] Editor: edit entries or add your own entries to the database in a custom dictionary

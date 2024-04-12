@@ -12,21 +12,25 @@
 Team Members: Sean Shi, Jack Paulman
 
 Tasks Accomplished:
-- UML diagram (Sean Shi)
-- Layout/UI (Sean Shi)
-- Database
+- We produced a UML diagram and BDD scenarios to ensure all users of (Sean Shi)
+- Built a Layout/UI using the Jetpack Compose framework which heavily uses Dependency Injection and Composition(Sean Shi)
+- We implemented abstractions and some concrete classes for both the Entries and Sorting Strategies (Sean Shi)
+
+* UML Class Diagram
 #+begin_src plantuml :file class-diagram.png
-Interface EntryFilterStrategy {
+Interface FilterStrategy {
 	List<Entries> getEntries(input)
 }
+note left: this interface is used to\nimplement the strategy pattern
 Class Entry{
 	Name
 	Content
 	display()
 }
 Class EntryFactory{
-	makeEntry()
+	makeEntry(name,description)
 }
+note bottom: Implementation of the\nFactory Pattern
 Class Database{
 	List<Entry> Dictionaries
 	Database getDatabase()
@@ -43,17 +47,36 @@ Class DummyFilterStrategy {
 	List<Entries> getEntries(input)
 }
 Class MainActivity {
-	List<EntryFilterStrategy> sortingMethods
+	List<FilterStrategy> sortingMethods
 }
-SimpleFilterStrategy ..|> EntryFilterStrategy
-FuzzyFilterStrategy ..|> EntryFilterStrategy
-DummyFilterStrategy ..|> EntryFilterStrategy
-SimpleFilterStrategy ..|> Database
+note bottom: the MainActivity class contains an\ninterface created with Jetpack Compose\nwhich is an example of the\ncomposite pattern
+SimpleFilterStrategy ..|> FilterStrategy
+FuzzyFilterStrategy ..|> FilterStrategy
+DummyFilterStrategy ..|> FilterStrategy
+SimpleFilterStrategy ..> Database
+FuzzyFilterStrategy ..> Database
 Database --o Entry
-MainActivity --o EntryFilterStrategy
+MainActivity --o FilterStrategy
 EntryFactory --> Entry
 #+end_src
 
 #+RESULTS:
 [[file:class-diagram.png]]
 
+
+# | Builder   | A pattern to incrementally build complex objects                                     |
+# | Factory   | Constructs objects without specifying the exact type                                 |
+# | Observer  | Allows external observers to be notified of changes internal to the observable class |
+# | Singleton | There can only be one                                                                |
+# | Composite | Each of these is either a base node or is composed of nodes                          |
+* Design Patterns
+We are currently using the composite pattern in Jetpack Compose to create a UI.
+This allows us to next rows, columns, input fields, and other UI elements including a self defined element for displaying an entry
+
+* Coverage
+[[file:coverage.png][Coverage Screenshot]]
+
+* Plans For next iteration
+Next iteration, we plan to implement persistent storage, and add a StrategyBuilder for custom filter methods.
+We will also add a second activity to show the detailed contents of each entry when it is clicked on.
+We will also try to implement more methods of importing Entries.
