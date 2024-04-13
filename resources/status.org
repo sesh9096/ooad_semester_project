@@ -15,6 +15,8 @@ Tasks Accomplished:
 - UML diagram (Sean Shi)
 - Layout/UI (Sean Shi)
 - Database
+- Search Bar (Jack Paulman)
+- Adding and searching dictionary (Jack Paulman)
 #+begin_src plantuml :file class-diagram.png
 Interface EntryFilterStrategy {
 	List<Entries> getEntries(input)
