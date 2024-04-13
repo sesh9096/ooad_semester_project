@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.*
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -30,25 +31,31 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import definote.ooad.ui.theme.MyApplicationTheme
+import java.io.File
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             MyApplicationTheme {
-                var search by remember {
-                    mutableStateOf("")
-                }
-                // A surface container using the 'background' color from the theme
-                Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    Column(
-                        horizontalAlignment = Alignment.Start
-                    ) {
-
+                Surface(color = MaterialTheme.colorScheme.background) {
+                    var searchText by remember { mutableStateOf("") }
+                    var searchResult by remember { mutableStateOf(emptyList<String>()) }
+                    Column {
                         SearchBar(
-                            searchText = search,
-                            onSearchTextChanged = { search = it }
+                            searchText = searchText,
+                            onSearchTextChanged = { searchText = it }
                         )
+                        Button(
+                            onClick = {
+                                addTextToDictionary(searchText)
+                                searchResult = searchFile(searchText)
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text("Add to Dictionary")
+                        }
+                        Greeting(name = "Android", searchText = searchText, searchResult = searchResult)
                         LazyColumn {
 
                         }
@@ -56,6 +63,27 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+    private fun searchFile(query: String): List<String> {
+        // Assuming "dictionary.txt" is your file
+        val file = File(filesDir, "dictionary.txt")
+        if (!file.exists()) {
+            return emptyList()
+        }
+
+        val searchResult = mutableListOf<String>()
+        file.forEachLine { line ->
+            if (line.contains(query, ignoreCase = true)) {
+                searchResult.add(line)
+            }
+        }
+        return searchResult
+    }
+
+    private fun addTextToDictionary(text: String) {
+        // Assuming "dictionary.txt" is your file
+        val file = File(filesDir, "dictionary.txt")
+        file.appendText("$text\n")
     }
 }
 
@@ -90,42 +118,54 @@ fun SearchBar(searchText: String, onSearchTextChanged: (String) -> Unit) {
 }
 
 @Composable
-fun Greeting(name: String, searchText: String) {
-    Text(text = "Hello $name! Searching for: $searchText")
+fun Greeting(name: String, searchText: String, searchResult: List<String>) {
+    Column {
+        Text(text = "Hello $name! Searching for: $searchText")
+        searchResult.forEach {
+            Text(text = it)
+        }
+    }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun Preview() {
+fun GreetingPreview() {
     MyApplicationTheme {
-        var search by remember {
-            mutableStateOf("")
-        }
-        var entries by remember {
-            mutableStateOf(listOf<Entry>())
-        }
-        var searchText = remember { mutableStateOf("World") }
-        Greeting(name = "Android", searchText = searchText.value)
-        // A surface container using the 'background' color from the theme
-        Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-            Column (
-                horizontalAlignment = Alignment.Start
-            ){
-                Row (
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = 2.dp)
+        Column {
+            val searchText = remember { mutableStateOf("World") }
+            val searchResult = listOf("Result 1", "Result 2", "Result 3") // Mock search result
+            var entries by remember {
+                mutableStateOf(listOf<Entry>())
+            }
+            var search = remember { mutableStateOf("World") }
+            SearchBar(searchText = searchText.value) { searchText.value = it }
+            Greeting(name = "Android", searchText = search.value, searchResult = searchResult)
+            // A surface container using the 'background' color from the theme
+            Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
+                Column(
+                    horizontalAlignment = Alignment.Start
                 ) {
-                    SearchBar(searchText = searchText.value) { searchText.value = it }
-                    Button(onClick = { /*TODO*/ }, modifier = Modifier.width(60.dp)) {
-                        Text("☰")
+                    Row(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(horizontal = 2.dp)
+                    ) {
+                        SearchBar(searchText = searchText.value) { searchText.value = it }
+                        Button(onClick = { /*TODO*/ }, modifier = Modifier.width(60.dp)) {
+                            Text("☰")
+                        }
+                    }
+                    LazyColumn {
+                        items(entries) { entry ->
+                            EntryDisplay(entry)
+                        }
                     }
                 }
-                LazyColumn {
-                    items(entries) { entry ->
-                        EntryDisplay(entry)
-                    }
-                }
+                Greeting(
+                    name = "Android",
+                    searchText = searchText.value,
+                    searchResult = searchResult
+                )
             }
         }
     }

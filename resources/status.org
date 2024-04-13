@@ -18,6 +18,9 @@ Tasks Accomplished:
 
 * UML Class Diagram
 #+begin_src plantuml :file class-diagram.png
+- Database
+- Search Bar (Jack Paulman)
+- Adding and searching dictionary (Jack Paulman)
 Interface FilterStrategy {
 	List<Entries> getEntries(input)
 }
@@ -78,5 +81,5 @@ This allows us to next rows, columns, input fields, and other UI elements includ
 
 * Plans For next iteration
 Next iteration, we plan to implement persistent storage, and add a StrategyBuilder for custom filter methods.
-We will also add a second activity to show the detailed contents of each entry when it is clicked on.
-We will also try to implement more methods of importing Entries.
+We will also add a second activity(page) to show the detailed contents of each entry when it is clicked on.
+We will also try to implement methods of importing Entries.
