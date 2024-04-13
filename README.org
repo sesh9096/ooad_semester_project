@@ -14,7 +14,12 @@ A dictionary is an set of entries in the database identified by its name and con
 /Definote/ can be used as a dictionary,
 a simple note taking app, or a lookup system for domain specific information.
 
-[[file:resources/Project 7 Update.pdf][Project 7 Report]]
+* Project/Homework 7
+[[file:resources/Project 7 Update.pdf][Project 7 Report]] and Jack's portion of the presentation are located under =resources=.
+
+Sean's portion of the presentation is located at
+
+[[https://drive.google.com/file/d/1MmushJyZLlFWV2vwBFwLi_pSYTJPo0VA/view?usp=sharing][https://drive.google.com/file/d/1MmushJyZLlFWV2vwBFwLi_pSYTJPo0VA/view?usp=sharing]]
 
 - Team Members: Sean Shi, Jack Paulman
 - Frameworks/Libraries: Android Libraries(SQLite database)
