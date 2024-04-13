@@ -9,6 +9,7 @@
 #+LATEX_HEADER: \geometry{margin=0.9in}
 #+LATEX_HEADER: \pagenumbering{gobble}
 * Definote- A dictionary/notetaking app
+[[https://github.com/sesh9096/ooad_semester_project/blob/sesh9096/resources/status.org][github link]]
 Team Members: Sean Shi, Jack Paulman
 
 Tasks Accomplished:
@@ -71,12 +72,21 @@ EntryFactory --> Entry
 # | Observer  | Allows external observers to be notified of changes internal to the observable class |
 # | Singleton | There can only be one                                                                |
 # | Composite | Each of these is either a base node or is composed of nodes                          |
+
+* Challenges
+I(Sean Shi) am currently on a trip with the CU Taekwondo team for the National Collegiate Taekwondo Championship,
+so we could not record a presentation together. The presentation is split into 2 parts, one is under the resources folder,
+The other is linked in the readme.
+
 * Design Patterns
 We are currently using the composite pattern in Jetpack Compose to create a UI.
 This allows us to next rows, columns, input fields, and other UI elements including a self defined element for displaying an entry
 
-* Coverage
-[[file:coverage.png][Coverage Screenshot]]
+* Tests/BDD
+We were not able to achieve 80% coverage because our project contains a lot of methods for drawing UI elements.
+These are difficult to test. See github for further details.
+
+In terms of BDD, we have 2 scenarios written under =app/src/test/resources/features/=
 
 * Plans For next iteration
 Next iteration, we plan to implement persistent storage, and add a StrategyBuilder for custom filter methods.
