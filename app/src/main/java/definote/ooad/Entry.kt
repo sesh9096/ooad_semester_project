@@ -1,7 +1,7 @@
 package definote.ooad
 
 interface Entry {
-    fun getName()
+    fun getName():String
     fun getDescription()
     fun display()
 }

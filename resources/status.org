@@ -15,12 +15,11 @@ Tasks Accomplished:
 - We produced a UML diagram and BDD scenarios to ensure all users of (Sean Shi)
 - Built a Layout/UI using the Jetpack Compose framework which heavily uses Dependency Injection and Composition(Sean Shi)
 - We implemented abstractions and some concrete classes for both the Entries and Sorting Strategies (Sean Shi)
+- Search Bar (Jack Paulman)
+- Adding and searching dictionary (Jack Paulman)
 
 * UML Class Diagram
 #+begin_src plantuml :file class-diagram.png
-- Database
-- Search Bar (Jack Paulman)
-- Adding and searching dictionary (Jack Paulman)
 Interface FilterStrategy {
 	List<Entries> getEntries(input)
 }

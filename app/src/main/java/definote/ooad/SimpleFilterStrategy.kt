@@ -1,7 +1,8 @@
 package definote.ooad
 
 class SimpleFilterStrategy : FilterStrategy{
-    override fun getEntries():List<Entry>{
-        return listOf<Entry>()
+    val entries:List<Entry> = listOf()
+    override fun getEntries(searchText:String):List<Entry>{
+        return entries.filter { entry: Entry -> entry.getName().contains(searchText) }
     }
 }
