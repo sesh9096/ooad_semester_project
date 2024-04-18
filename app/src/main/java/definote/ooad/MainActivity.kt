@@ -106,13 +106,13 @@ fun EntryDisplay(entry: Entry, modifier: Modifier = Modifier.fillMaxWidth()) {
 @Composable
 fun SearchBar(searchText: String, onSearchTextChanged: (String) -> Unit) {
     Row(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxWidth()
     ) {
         TextField(
             value = searchText,
             onValueChange = onSearchTextChanged,
             modifier = Modifier.padding(horizontal = 3.dp).weight(10F),
-            label = { Text("Search for") }
+            label = { Text("Search") }
         )
     }
 }
@@ -127,47 +127,47 @@ fun Greeting(name: String, searchText: String, searchResult: List<String>) {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    MyApplicationTheme {
-        Column {
-            val searchText = remember { mutableStateOf("World") }
-            val searchResult = listOf("Result 1", "Result 2", "Result 3") // Mock search result
-            var entries by remember {
-                mutableStateOf(listOf<Entry>())
-            }
-            var search = remember { mutableStateOf("World") }
-            SearchBar(searchText = searchText.value) { searchText.value = it }
-            Greeting(name = "Android", searchText = search.value, searchResult = searchResult)
-            // A surface container using the 'background' color from the theme
-            Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                Column(
-                    horizontalAlignment = Alignment.Start
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(horizontal = 2.dp)
-                    ) {
-                        SearchBar(searchText = searchText.value) { searchText.value = it }
-                        Button(onClick = { /*TODO*/ }, modifier = Modifier.width(60.dp)) {
-                            Text("☰")
-                        }
-                    }
-                    LazyColumn {
-                        items(entries) { entry ->
-                            EntryDisplay(entry)
-                        }
-                    }
-                }
-                Greeting(
-                    name = "Android",
-                    searchText = searchText.value,
-                    searchResult = searchResult
-                )
-            }
-        }
-    }
-}
-
+//@Preview(showBackground = true)
+//@Composable
+//fun GreetingPreview() {
+//    MyApplicationTheme {
+//        Column {
+//            val searchText = remember { mutableStateOf("World") }
+//            val searchResult = listOf("Result 1", "Result 2", "Result 3") // Mock search result
+//            var entries by remember {
+//                mutableStateOf(listOf<Entry>())
+//            }
+//            var search = remember { mutableStateOf("World") }
+//            SearchBar(searchText = searchText.value) { searchText.value = it }
+//            Greeting(name = "Android", searchText = search.value, searchResult = searchResult)
+//            // A surface container using the 'background' color from the theme
+//            Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
+//                Column(
+//                    horizontalAlignment = Alignment.Start
+//                ) {
+//                    Row(
+//                        modifier = Modifier
+//                            .fillMaxSize()
+//                            .padding(horizontal = 2.dp)
+//                    ) {
+//                        SearchBar(searchText = searchText.value) { searchText.value = it }
+//                        Button(onClick = { /*TODO*/ }, modifier = Modifier.width(60.dp)) {
+//                            Text("☰")
+//                        }
+//                    }
+//                    LazyColumn {
+//                        items(entries) { entry ->
+//                            EntryDisplay(entry)
+//                        }
+//                    }
+//                }
+//                Greeting(
+//                    name = "Android",
+//                    searchText = searchText.value,
+//                    searchResult = searchResult
+//                )
+//            }
+//        }
+//    }
+//}
+//
