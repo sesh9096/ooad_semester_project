@@ -1,8 +1,12 @@
 package definote.ooad
 
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
 @Entity
-data class Entry {
+data class Entry (
     @PrimaryKey val uid: Int,
-    @ColumnInfo(name = "first_name") val name: String?,
-    @ColumnInfo(name = "last_name") val description: String?
-}
+    @ColumnInfo(name = "name") val name: String,
+    @ColumnInfo(name = "description") val description: String
+)

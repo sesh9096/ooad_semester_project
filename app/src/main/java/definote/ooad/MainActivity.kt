@@ -93,11 +93,11 @@ fun EntryDisplay(entry: Entry, modifier: Modifier = Modifier.fillMaxWidth()) {
         modifier = Modifier.fillMaxWidth()
     ){
         Text(
-            text = "${entry.getName()}.!",
+            text = "${entry.name}.!",
             fontSize = 20.sp,
         )
         Text(
-            text = "${entry.getDescription()}",
+            text = "${entry.description}",
             modifier = modifier,
             fontSize = 10.sp,
         )
