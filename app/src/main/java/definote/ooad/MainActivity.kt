@@ -30,10 +30,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.room.Room
 import definote.ooad.ui.theme.MyApplicationTheme
 import java.io.File
 
 class MainActivity : ComponentActivity() {
+    val db = Room.databaseBuilder(
+            applicationContext,
+            AppDatabase::class.java, "EntryData"
+        ).build()
+    val entryDao = db.entryDao()
+    val entries: List<Entry> = entryDao.getAll()
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
