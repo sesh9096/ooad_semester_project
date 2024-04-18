@@ -13,8 +13,10 @@ interface EntryDao {
     @Query("SELECT * FROM entry WHERE uid IN (:userIds)")
     fun loadAllByIds(userIds: IntArray): List<Entry>
 
-    @Query("SELECT * FROM entry WHERE name LIKE :first")
-    fun findByName(first: String): List<Entry>
+    @Query("SELECT * FROM entry WHERE name LIKE '%' || :name || '%'")
+    fun searchByName(name: String): List<Entry>
+    @Query("SELECT * FROM entry WHERE name LIKE :name LIMIT 1")
+    fun findByNameExact(name: String): Entry
 
     @Insert
     fun insertAll(vararg entries: Entry)
