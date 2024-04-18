@@ -1,7 +1,8 @@
 package definote.ooad
 
-interface Entry {
-    fun getName():String
-    fun getDescription()
-    fun display()
+@Entity
+data class Entry {
+    @PrimaryKey val uid: Int,
+    @ColumnInfo(name = "first_name") val name: String?,
+    @ColumnInfo(name = "last_name") val description: String?
 }
