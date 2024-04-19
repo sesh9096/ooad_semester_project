@@ -17,7 +17,7 @@ abstract class AppDatabase: RoomDatabase(){
                 instance ?: Room.databaseBuilder(
                     context.applicationContext,
                     AppDatabase::class.java,
-                    "EntryData"
+                    "AppData"
                 ).build().also { instance = it }
             }
     }

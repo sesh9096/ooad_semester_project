@@ -24,4 +24,20 @@ class DatabaseTest {
         assertEquals("Database is not a singleton", db1, db2)
         assertNotNull("Database should not be null", db1)
     }
+    @Test
+    fun addAddGetRemove() {
+        // Context of the app under test.
+        val appContext = InstrumentationRegistry.getInstrumentation().targetContext
+        val dao = AppDatabase.getInstance(appContext).entryDao()
+        val name = "asdfghjkl"
+        val description = "blah blah blah"
+        val entry = Entry(name = name, description = description)
+        dao.insert(entry)
+        val entryRet = dao.findByNameExact(name)
+        assertNotNull("Entry should not be null", entryRet)
+        assertEquals("Entries should be the same", entry, entryRet)
+        dao.delete(entry)
+        val entryRet2 = dao.findByNameExact(name);
+        assertNull("Entry should have been deleted", entryRet2)
+    }
 }
