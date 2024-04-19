@@ -35,13 +35,7 @@ import definote.ooad.ui.theme.MyApplicationTheme
 import java.io.File
 
 class MainActivity : ComponentActivity() {
-    val db = Room.databaseBuilder(
-            applicationContext,
-            AppDatabase::class.java, "EntryData"
-        ).build()
-    val entryDao = db.entryDao()
-    val entries: List<Entry> = entryDao.getAll()
-
+    val entryDao = AppDatabase.getInstance(applicationContext).entryDao()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

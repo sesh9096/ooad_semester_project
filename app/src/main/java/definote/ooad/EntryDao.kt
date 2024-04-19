@@ -4,9 +4,14 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.RawQuery
+import androidx.sqlite.db.SupportSQLiteQuery
 
 @Dao
 interface EntryDao {
+    @RawQuery
+    fun getWithRawQuery(query: SupportSQLiteQuery): List<Entry>
+
     @Query("SELECT * FROM entry")
     fun getAll(): List<Entry>
 
