@@ -1,5 +1,6 @@
 package definote.ooad
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -56,6 +57,14 @@ class MainActivity : ComponentActivity() {
                             Text("Add to Dictionary")
                         }
                         Greeting(name = "Android", searchText = searchText, searchResult = searchResult)
+                        Button(
+                            onClick = {
+                                navigateToDisplayEntryPage()
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text("Go to Display Entry Page")
+                        }
                         LazyColumn {
 
                         }
@@ -63,6 +72,10 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+    private fun navigateToDisplayEntryPage() {
+        val intent = Intent(this, DisplayEntryPage::class.java)
+        startActivity(intent)
     }
     private fun searchFile(query: String): List<String> {
         // Assuming "dictionary.txt" is your file
