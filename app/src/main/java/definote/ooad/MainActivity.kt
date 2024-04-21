@@ -36,13 +36,16 @@ import definote.ooad.ui.theme.MyApplicationTheme
 import java.io.File
 
 class MainActivity : ComponentActivity() {
-    val entryDao = AppDatabase.getInstance(applicationContext).entryDao()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val entryDao = AppDatabase.getInstance(applicationContext).entryDao()
         super.onCreate(savedInstanceState)
         setContent {
             MyApplicationTheme {
                 Surface(color = MaterialTheme.colorScheme.background) {
+                    var searchStrategy by remember {
+                        mutableStateOf(SimpleFilterStrategy(applicationContext))
+                    }
                     var searchText by remember { mutableStateOf("") }
                     var searchResult by remember { mutableStateOf(emptyList<String>()) }
                     Column {
@@ -69,7 +72,6 @@ class MainActivity : ComponentActivity() {
                             Text("Go to Display Entry Page")
                         }
                         LazyColumn {
-
                         }
                     }
                 }
@@ -109,11 +111,11 @@ fun EntryDisplay(entry: Entry, modifier: Modifier = Modifier.fillMaxWidth()) {
         modifier = Modifier.fillMaxWidth()
     ){
         Text(
-            text = "${entry.name}.!",
+            text = entry.name,
             fontSize = 20.sp,
         )
         Text(
-            text = "${entry.description}",
+            text = entry.description,
             modifier = modifier,
             fontSize = 10.sp,
         )
@@ -127,7 +129,9 @@ fun SearchBar(searchText: String, onSearchTextChanged: (String) -> Unit) {
         TextField(
             value = searchText,
             onValueChange = onSearchTextChanged,
-            modifier = Modifier.padding(horizontal = 3.dp).weight(10F),
+            modifier = Modifier
+                .padding(horizontal = 3.dp)
+                .weight(10F),
             label = { Text("Search") }
         )
     }
