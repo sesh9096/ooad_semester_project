@@ -20,8 +20,13 @@ interface EntryDao {
 
     @Query("SELECT * FROM entry WHERE name LIKE '%' || :name || '%'")
     fun searchByName(name: String): List<Entry>
-    @Query("SELECT * FROM entry WHERE name LIKE :name LIMIT 1")
-    fun findByNameExact(name: String): Entry
+
+    // since the primary key is not name, there can be more than one entry with a given name
+    @Query("SELECT * FROM entry WHERE name LIKE :name")
+    fun searchByNameExact(name: String): List<Entry>
+
+    @Query("SELECT * FROM entry WHERE uid == :id")
+    fun findByID(id:Int): List<Entry>
 
     @Insert
     fun insertAll(vararg entries: Entry)
