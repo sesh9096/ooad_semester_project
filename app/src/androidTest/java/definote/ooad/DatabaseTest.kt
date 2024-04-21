@@ -35,8 +35,10 @@ class DatabaseTest {
         dao.insert(entry)
         val entryRet = dao.findByNameExact(name)
         assertNotNull("Entry should not be null", entryRet)
-        assertEquals("Entries should be the same", entry, entryRet)
-        dao.delete(entry)
+        // these may not have the same id because that is taken care of by db
+        assertEquals("Entry names should be the same", entry.name, entryRet.name)
+        assertEquals("Entry names should be the same", entry.description, entryRet.description)
+        dao.delete(entryRet)
         val entryRet2 = dao.findByNameExact(name);
         assertNull("Entry should have been deleted", entryRet2)
     }
