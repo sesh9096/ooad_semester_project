@@ -6,7 +6,11 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class Entry (
-    @PrimaryKey val uid: Int,
-    @ColumnInfo(name = "name") val name: String,
-    @ColumnInfo(name = "description") val description: String
+    // Maybe this has some issues? will find out
+    @PrimaryKey(autoGenerate = true)
+    val uid: Int = 0,
+    @ColumnInfo(name = "name")
+    val name: String,
+    @ColumnInfo(name = "description")
+    val description: String
 )

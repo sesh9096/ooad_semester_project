@@ -1,0 +1,43 @@
+package definote.ooad
+
+import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.ext.junit.runners.AndroidJUnit4
+
+import org.junit.Test
+import org.junit.runner.RunWith
+
+import org.junit.Assert.*
+
+/**
+ * Instrumented test, which will execute on an Android device.
+ *
+ * See [testing documentation](http://d.android.com/tools/testing).
+ */
+@RunWith(AndroidJUnit4::class)
+class DatabaseTest {
+    @Test
+    fun databaseIsSingleton() {
+        // Context of the app under test.
+        val appContext = InstrumentationRegistry.getInstrumentation().targetContext
+        val db1 = AppDatabase.getInstance(appContext)
+        val db2 = AppDatabase.getInstance(appContext)
+        assertEquals("Database is not a singleton", db1, db2)
+        assertNotNull("Database should not be null", db1)
+    }
+    @Test
+    fun addAddGetRemove() {
+        // Context of the app under test.
+        val appContext = InstrumentationRegistry.getInstrumentation().targetContext
+        val dao = AppDatabase.getInstance(appContext).entryDao()
+        val name = "asdfghjkl"
+        val description = "blah blah blah"
+        val entry = Entry(name = name, description = description)
+        dao.insert(entry)
+        val entryRet = dao.findByNameExact(name)
+        assertNotNull("Entry should not be null", entryRet)
+        assertEquals("Entries should be the same", entry, entryRet)
+        dao.delete(entry)
+        val entryRet2 = dao.findByNameExact(name);
+        assertNull("Entry should have been deleted", entryRet2)
+    }
+}

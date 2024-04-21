@@ -1,8 +1,7 @@
 package definote.ooad
 
-class SimpleFilterStrategy : FilterStrategy{
-    val entries:List<Entry> = listOf()
-    override fun getEntries(searchText:String):List<Entry>{
-        return entries.filter { entry: Entry -> entry.name.contains(searchText) }
-    }
+import android.content.Context
+class SimpleFilterStrategy(context: Context) : FilterStrategy{
+    val entryDao: EntryDao = AppDatabase.getInstance(context).entryDao()
+    override fun getEntries(searchText:String) = entryDao.searchByName(searchText)
 }

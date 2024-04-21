@@ -9,7 +9,8 @@
 #+LATEX_HEADER: \geometry{margin=0.9in}
 #+LATEX_HEADER: \pagenumbering{gobble}
 * Definote- A dictionary/notetaking app
-[[https://github.com/sesh9096/ooad_semester_project/blob/sesh9096/resources/status.org][github link]]
+[[https://github.com/sesh9096/ooad_semester_project/][=https://github.com/sesh9096/ooad_semester_project=]]
+
 Team Members: Sean Shi, Jack Paulman
 
 Tasks Accomplished:
@@ -74,9 +75,11 @@ EntryFactory --> Entry
 # | Composite | Each of these is either a base node or is composed of nodes                          |
 
 * Challenges
-I(Sean Shi) am currently on a trip with the CU Taekwondo team for the National Collegiate Taekwondo Championship,
+I(Sean Shi) am currently on a trip with the CU Taekwondo team for the National Collegiate Taekwondo Championship held at UC Berkeley,
 so we could not record a presentation together. The presentation is split into 2 parts, one is under the resources folder,
 The other is linked in the readme.
+
+[[https://drive.google.com/file/d/1MmushJyZLlFWV2vwBFwLi_pSYTJPo0VA/view?usp=sharing]]
 
 * Design Patterns
 We are currently using the composite pattern in Jetpack Compose to create a UI.
