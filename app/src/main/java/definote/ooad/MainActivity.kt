@@ -23,10 +23,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import definote.ooad.ui.theme.MyApplicationTheme
-import java.io.File
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         val entryDao = AppDatabase.getInstance(applicationContext).entryDao()
         super.onCreate(savedInstanceState)
@@ -37,7 +38,7 @@ class MainActivity : ComponentActivity() {
                         mutableStateOf(SimpleFilterStrategy(applicationContext))
                     }
                     var searchText by remember { mutableStateOf("") }
-                    var searchResult by remember { mutableStateOf(emptyList<String>()) }
+                    var searchResult by remember { mutableStateOf(emptyList<Entry>()) }
                     Column {
                         SearchBar(
                             searchText = searchText,
@@ -45,22 +46,23 @@ class MainActivity : ComponentActivity() {
                         )
                         Button(
                             onClick = {
-                                addTextToDictionary(searchText)
-                                searchResult = searchFile(searchText)
+                                addTextToDB(searchText)
+                                //searchResult = searchDB(searchText)
                             },
                             modifier = Modifier.fillMaxWidth()
                         ) {
                             Text("Add to Dictionary")
                         }
-                        Greeting(name = "Android", searchText = searchText, searchResult = searchResult)
                         Button(
                             onClick = {
-                                navigateToDisplayEntryPage()
+                                //navigateToDisplayEntryPage()
+                                searchResult = searchDB(searchText)
                             },
                             modifier = Modifier.fillMaxWidth()
                         ) {
-                            Text("Go to Display Entry Page")
+                            Text("Search")
                         }
+                        Greeting(name = "User", searchText = searchText, searchResult = searchResult)
                         LazyColumn {
                         }
                     }
@@ -72,6 +74,16 @@ class MainActivity : ComponentActivity() {
         val intent = Intent(this, DisplayEntryPage::class.java)
         startActivity(intent)
     }
+    private fun searchDB(text: String): List<Entry>{
+        var result = emptyList<Entry>()
+        GlobalScope.launch(Dispatchers.IO) {
+            val simpleStrategy = SimpleFilterStrategy(applicationContext)
+            result =  simpleStrategy.getEntries(text)
+        }
+        println("Searching")
+        return result
+    }
+    /*
     private fun searchFile(query: String): List<String> {
         // Assuming "dictionary.txt" is your file
         val file = File(filesDir, "dictionary.txt")
@@ -87,12 +99,12 @@ class MainActivity : ComponentActivity() {
         }
         return searchResult
     }
+    */
 
-    private fun addTextToDictionary(text: String) {
-        // Assuming "dictionary.txt" is your file
-        //val file = File(filesDir, "dictionary.txt")
-        //file.appendText("$text\n")
-        val entryFactory = EntryFactory()
+    private fun addTextToDB(text: String) {
+        val entryDao = AppDatabase.getInstance(applicationContext).entryDao()
+        val entryFactory = EntryFactory(entryDao)
+        println("Insert")
         entryFactory.generateAndAddEntry("Test", text)
     }
 }
@@ -130,11 +142,11 @@ fun SearchBar(searchText: String, onSearchTextChanged: (String) -> Unit) {
 }
 
 @Composable
-fun Greeting(name: String, searchText: String, searchResult: List<String>) {
+fun Greeting(name: String, searchText: String, searchResult: List<Entry>) {
     Column {
         Text(text = "Hello $name! Searching for: $searchText")
         searchResult.forEach {
-            Text(text = it)
+            Text(text = it.name)
         }
     }
 }
