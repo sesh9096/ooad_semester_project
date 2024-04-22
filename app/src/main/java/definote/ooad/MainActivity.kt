@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,22 +14,26 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import definote.ooad.ui.theme.MyApplicationTheme
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 class MainActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) = runBlocking{
         val entryDao = AppDatabase.getInstance(applicationContext).entryDao()
         super.onCreate(savedInstanceState)
         setContent {
@@ -56,13 +61,20 @@ class MainActivity : ComponentActivity() {
                         Button(
                             onClick = {
                                 //navigateToDisplayEntryPage()
-                                searchResult = searchDB(searchText)
+                                val job = GlobalScope.launch(Dispatchers.IO) {
+                                    searchResult = searchDB(searchText)
+                                }
                             },
                             modifier = Modifier.fillMaxWidth()
                         ) {
                             Text("Search")
                         }
-                        Greeting(name = "User", searchText = searchText, searchResult = searchResult)
+                        Greeting(
+                            name = "User",
+                            searchText = searchText,
+                            searchResult = searchResult,
+                            onClick = { navigateToDisplayEntryPage()}
+                        )
                         LazyColumn {
                         }
                     }
@@ -74,12 +86,13 @@ class MainActivity : ComponentActivity() {
         val intent = Intent(this, DisplayEntryPage::class.java)
         startActivity(intent)
     }
-    private fun searchDB(text: String): List<Entry>{
+    private suspend fun searchDB(text: String): List<Entry>{
         var result = emptyList<Entry>()
-        GlobalScope.launch(Dispatchers.IO) {
+        val job = GlobalScope.launch(Dispatchers.IO) {
             val simpleStrategy = SimpleFilterStrategy(applicationContext)
             result =  simpleStrategy.getEntries(text)
         }
+        job.join()
         println("Searching")
         return result
     }
@@ -110,11 +123,14 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun EntryDisplay(entry: Entry, modifier: Modifier = Modifier.fillMaxWidth()) {
+fun EntryDisplay(entry: Entry, modifier: Modifier = Modifier.fillMaxWidth(), onClick:() -> Unit) {
+    var enabled by rememberSaveable{ mutableStateOf(true)}
     Row(
-        modifier = Modifier.fillMaxWidth()
+        modifier.clickable{
+            onClick()
+        }
     ){
-        Text(
+        /*Text(
             text = entry.name,
             fontSize = 20.sp,
         )
@@ -123,6 +139,12 @@ fun EntryDisplay(entry: Entry, modifier: Modifier = Modifier.fillMaxWidth()) {
             modifier = modifier,
             fontSize = 10.sp,
         )
+        */
+        TextButton(
+            onClick = { onClick() }
+        ) {
+            Text("${entry.name}")
+        }
     }
 }
 @Composable
@@ -142,56 +164,58 @@ fun SearchBar(searchText: String, onSearchTextChanged: (String) -> Unit) {
 }
 
 @Composable
-fun Greeting(name: String, searchText: String, searchResult: List<Entry>) {
+fun Greeting(name: String, searchText: String, searchResult: List<Entry>, onClick: () -> Unit) {
     Column {
         Text(text = "Hello $name! Searching for: $searchText")
         searchResult.forEach {
-            Text(text = it.name)
+            EntryDisplay(it, onClick = onClick)
         }
     }
 }
 
-//@Preview(showBackground = true)
-//@Composable
-//fun GreetingPreview() {
-//    MyApplicationTheme {
-//        Column {
-//            val searchText = remember { mutableStateOf("World") }
-//            val searchResult = listOf("Result 1", "Result 2", "Result 3") // Mock search result
-//            var entries by remember {
-//                mutableStateOf(listOf<Entry>())
-//            }
-//            var search = remember { mutableStateOf("World") }
-//            SearchBar(searchText = searchText.value) { searchText.value = it }
-//            Greeting(name = "Android", searchText = search.value, searchResult = searchResult)
-//            // A surface container using the 'background' color from the theme
-//            Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-//                Column(
-//                    horizontalAlignment = Alignment.Start
-//                ) {
-//                    Row(
-//                        modifier = Modifier
-//                            .fillMaxSize()
-//                            .padding(horizontal = 2.dp)
-//                    ) {
-//                        SearchBar(searchText = searchText.value) { searchText.value = it }
-//                        Button(onClick = { /*TODO*/ }, modifier = Modifier.width(60.dp)) {
-//                            Text("☰")
-//                        }
-//                    }
-//                    LazyColumn {
-//                        items(entries) { entry ->
-//                            EntryDisplay(entry)
-//                        }
-//                    }
-//                }
-//                Greeting(
-//                    name = "Android",
-//                    searchText = searchText.value,
-//                    searchResult = searchResult
-//                )
-//            }
-//        }
-//    }
-//}
-//
+/*
+@Preview(showBackground = true)
+@Composable
+fun GreetingPreview() {
+MyApplicationTheme {
+Column {
+val searchText = remember { mutableStateOf("World") }
+val searchResult = listOf("Result 1", "Result 2", "Result 3") // Mock search result
+var entries by remember {
+mutableStateOf(listOf<Entry>())
+}
+var search = remember { mutableStateOf("World") }
+SearchBar(searchText = searchText.value) { searchText.value = it }
+Greeting(name = "Android", searchText = search.value, searchResult = searchResult)
+// A surface container using the 'background' color from the theme
+Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
+Column(
+horizontalAlignment = Alignment.Start
+) {
+Row(
+modifier = Modifier
+.fillMaxSize()
+.padding(horizontal = 2.dp)
+) {
+SearchBar(searchText = searchText.value) { searchText.value = it }
+Button(onClick = { / *TODO* / }, modifier = Modifier.width(60.dp)) {
+Text("☰")
+}
+}
+LazyColumn {
+items(entries) { entry ->
+EntryDisplay(entry)
+}
+}
+}
+Greeting(
+name = "Android",
+searchText = searchText.value,
+searchResult = searchResult
+)
+}
+}
+}
+}
+
+*/
