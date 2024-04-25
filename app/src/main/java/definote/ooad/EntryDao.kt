@@ -10,8 +10,8 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface EntryDao {
-    @RawQuery
-    suspend fun getWithRawQuery(query: SupportSQLiteQuery): Flow<List<Entry>>
+    @RawQuery(observedEntities = [Entry::class])
+    fun getWithRawQuery(query: SupportSQLiteQuery): Flow<List<Entry>>
 
     @Query("SELECT * FROM entry")
     fun getAll(): Flow<List<Entry>>

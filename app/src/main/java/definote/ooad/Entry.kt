@@ -3,6 +3,7 @@ package definote.ooad
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.io.Serializable
 
 @Entity
 data class Entry (
@@ -12,5 +13,7 @@ data class Entry (
     @ColumnInfo(name = "name")
     val name: String,
     @ColumnInfo(name = "description")
-    val description: String
-)
+    val description: String,
+    @ColumnInfo(name = "part")
+    val part: String,
+) : Serializable

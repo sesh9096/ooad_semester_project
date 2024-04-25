@@ -2,6 +2,8 @@ package definote.ooad
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -31,15 +33,18 @@ class DatabaseTest {
         val dao = AppDatabase.getInstance(appContext).entryDao()
         val name = "asdfghjkl"
         val description = "blah blah blah"
-        val entry = Entry(name = name, description = description)
-        dao.insert(entry)
-        val entryRet = dao.searchByNameExact(name)[0]
-        assertNotNull("Entry should not be null", entryRet)
-        // these may not have the same id because that is taken care of by db
-        assertEquals("Entry names should be the same", entry.name, entryRet.name)
-        assertEquals("Entry descriptions should be the same", entry.description, entryRet.description)
-        dao.delete(entryRet)
-        val entryRet2 = dao.searchByNameExact(name);
-        assertNull("Entry should have been deleted", entryRet2)
+        val part = "part"
+        val entry = Entry(name = name, description = description, part = part)
+        runBlocking {
+            dao.insert(entry)
+            val entryRet = dao.searchByNameExact(name).first()[0]
+            assertNotNull("Entry should not be null", entryRet)
+            // these may not have the same id because that is taken care of by db
+            assertEquals("Entry names should be the same", entry.name, entryRet.name)
+            assertEquals("Entry descriptions should be the same", entry.description, entryRet.description)
+            dao.delete(entryRet)
+            val entryRet2 = dao.searchByNameExact(name)
+            assertNull("Entry should have been deleted", entryRet2)
+        }
     }
 }

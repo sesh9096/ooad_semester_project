@@ -4,12 +4,14 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -17,6 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -25,76 +28,99 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import definote.ooad.ui.theme.MyApplicationTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 class MainActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) = runBlocking{
-        val entryDao = AppDatabase.getInstance(applicationContext).entryDao()
+    val viewModel by viewModels<EntryListViewModel>(
+        factoryProducer = {
+            object : ViewModelProvider.Factory{
+                override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                    return EntryListViewModel(applicationContext) as T
+                }
+            }
+        }
+    )
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             MyApplicationTheme {
                 Surface(color = MaterialTheme.colorScheme.background) {
+                    val state by viewModel.state.collectAsState()
                     var searchStrategy by remember {
                         mutableStateOf(SimpleFilterStrategy(applicationContext))
                     }
-                    var searchText by remember { mutableStateOf("") }
-                    var searchResult by remember { mutableStateOf(emptyList<Entry>()) }
                     Column {
-                        SearchBar(
-                            searchText = searchText,
-                            onSearchTextChanged = { searchText = it }
-                        )
-                        Button(
-                            onClick = {
-                                addTextToDB(searchText)
-                                //searchResult = searchDB(searchText)
-                            },
+                        Row(
                             modifier = Modifier.fillMaxWidth()
                         ) {
-                            Text("Add to Dictionary")
+                            TextField(
+                                value = state.searchText,
+                                onValueChange = {searchText:String -> viewModel.search(searchText)},
+                                modifier = Modifier
+                                    .padding(horizontal = 3.dp)
+                                    .weight(10F),
+                                label = { Text("Search") }
+                            )
                         }
-                        Button(
-                            onClick = {
-                                //navigateToDisplayEntryPage()
-                                val job = GlobalScope.launch(Dispatchers.IO) {
-                                    searchResult = searchDB(searchText)
-                                }
-                            },
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Text("Search")
-                        }
-                        Greeting(
-                            name = "User",
-                            searchText = searchText,
-                            searchResult = searchResult,
-                            onClick = { navigateToDisplayEntryPage()}
-                        )
                         LazyColumn {
+                            item{
+                                Row(
+                                    Modifier.fillMaxWidth().clickable {
+                                        // TODO: Make edit activity work and launch here
+                                        Intent(
+                                            applicationContext,
+                                            DisplayEntryPage::class.java
+                                        ).also {
+                                            it.putExtra("ENTRY_OBJECT", Entry(name = "hello", description = "desc", part = "n"))
+                                            startActivity(it)
+                                        }
+                                    }
+                                ) {
+                                    Text(text = "Add New entry")
+                                }
+                            }
+                            items(state.entries) {entry->
+                                Row(
+                                    Modifier.fillMaxWidth().clickable{
+                                        Intent(applicationContext, DisplayEntryPage::class.java).also{
+                                            it.putExtra("ENTRY_OBJECT", entry)
+                                            startActivity(it)
+                                        }
+                                    }
+                                ){
+                                    /*Text(
+                                        text = entry.name,
+                                        fontSize = 20.sp,
+                                    )
+                                    Text(
+                                        text = entry.description,
+                                        modifier = modifier,
+                                        fontSize = 10.sp,
+                                    )
+                                    */
+                                    Text(entry.name)
+                                }
+                            }
                         }
                     }
                 }
             }
         }
     }
-    private fun navigateToDisplayEntryPage() {
-        val intent = Intent(this, DisplayEntryPage::class.java)
-        startActivity(intent)
-    }
-    private suspend fun searchDB(text: String): List<Entry>{
-        var result = emptyList<Entry>()
-        val job = GlobalScope.launch(Dispatchers.IO) {
-            val simpleStrategy = SimpleFilterStrategy(applicationContext)
-            result =  simpleStrategy.getEntries(text)
+    private fun navigateToDisplayEntryPage(entry: Entry) {
+         Intent(applicationContext, DisplayEntryPage::class.java).also{
+            it.putExtra("ENTRY_OBJECT", entry)
+            startActivity(it)
         }
-        job.join()
-        println("Searching")
-        return result
     }
     /*
     private fun searchFile(query: String): List<String> {
@@ -118,60 +144,52 @@ class MainActivity : ComponentActivity() {
         val entryDao = AppDatabase.getInstance(applicationContext).entryDao()
         val entryFactory = EntryFactory(entryDao)
         println("Insert")
-        entryFactory.generateAndAddEntry("Test", text)
+        entryFactory.generateAndAddEntry("Test", text, "n")
     }
 }
 
-@Composable
-fun EntryDisplay(entry: Entry, modifier: Modifier = Modifier.fillMaxWidth(), onClick:() -> Unit) {
-    var enabled by rememberSaveable{ mutableStateOf(true)}
-    Row(
-        modifier.clickable{
-            onClick()
-        }
-    ){
-        /*Text(
-            text = entry.name,
-            fontSize = 20.sp,
-        )
-        Text(
-            text = entry.description,
-            modifier = modifier,
-            fontSize = 10.sp,
-        )
-        */
-        TextButton(
-            onClick = { onClick() }
-        ) {
-            Text("${entry.name}")
-        }
-    }
-}
-@Composable
-fun SearchBar(searchText: String, onSearchTextChanged: (String) -> Unit) {
-    Row(
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        TextField(
-            value = searchText,
-            onValueChange = onSearchTextChanged,
-            modifier = Modifier
-                .padding(horizontal = 3.dp)
-                .weight(10F),
-            label = { Text("Search") }
-        )
-    }
-}
-
-@Composable
-fun Greeting(name: String, searchText: String, searchResult: List<Entry>, onClick: () -> Unit) {
-    Column {
-        Text(text = "Hello $name! Searching for: $searchText")
-        searchResult.forEach {
-            EntryDisplay(it, onClick = onClick)
-        }
-    }
-}
+//@Composable
+//fun EntryDisplay(entry: Entry, modifier: Modifier = Modifier.fillMaxWidth()) {
+//    Row(
+//        modifier.clickable{
+//            Intent(applicationContext, DisplayEntryPage::class.java).also{
+//                it.putExtra("ENTRY_OBJECT", entry)
+//                startActivity(it)
+//            }
+//        }
+//    ){
+//        /*Text(
+//            text = entry.name,
+//            fontSize = 20.sp,
+//        )
+//        Text(
+//            text = entry.description,
+//            modifier = modifier,
+//            fontSize = 10.sp,
+//        )
+//        */
+//        TextButton(
+//            onClick = { onClick() }
+//        ) {
+//            Text(entry.name)
+//        }
+//    }
+//}
+//@Composable
+//fun SearchBar(searchText: String, onSearchTextChanged: (String) -> Unit) {
+//    Row(
+//        modifier = Modifier.fillMaxWidth()
+//    ) {
+//        TextField(
+//            value = searchText,
+//            onValueChange = onSearchTextChanged,
+//            modifier = Modifier
+//                .padding(horizontal = 3.dp)
+//                .weight(10F),
+//            label = { Text("Search") }
+//        )
+//    }
+//}
 
 /*
 @Preview(showBackground = true)
