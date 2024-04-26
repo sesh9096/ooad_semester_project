@@ -19,15 +19,15 @@ interface EntryDao {
     @Query("SELECT * FROM entry WHERE uid IN (:userIds)")
     fun loadAllByIds(userIds: IntArray): Flow<List<Entry>>
 
-    @Query("SELECT * FROM entry WHERE name LIKE '%' || :name || '%' ORDER BY LENGTH(name)")
+    @Query("SELECT * FROM entry WHERE name LIKE '%' || :name || '%' ORDER BY LENGTH(name) LIMIT 100")
     fun searchByName(name: String): Flow<List<Entry>>
 
     // since the primary key is not name, there can be more than one entry with a given name
-    @Query("SELECT * FROM entry WHERE name LIKE :name")
+    @Query("SELECT * FROM entry WHERE name LIKE :name LIMIT 100")
     fun searchByNameExact(name: String): Flow<List<Entry>>
 
     @Query("SELECT * FROM entry WHERE uid == :id")
-    fun findByID(id:Int): Flow<List<Entry>>
+    suspend fun findByID(id:Int): Entry
 
     @Insert
     suspend fun insertAll(vararg entries: Entry)

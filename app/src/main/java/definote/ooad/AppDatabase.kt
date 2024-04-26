@@ -17,8 +17,9 @@ abstract class AppDatabase: RoomDatabase(){
                 instance ?: Room.databaseBuilder(
                     context.applicationContext,
                     AppDatabase::class.java,
-                    "AppData"
-                ).build().also { instance = it }
+                    "appdata.db"
+                ).createFromAsset("appdata.db")
+                    .build().also { instance = it }
             }
     }
     abstract fun entryDao(): EntryDao

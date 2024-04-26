@@ -16,7 +16,7 @@
             android:name=".EditEntryActivity"
             android:exported="false" />
         <activity
-            android:name=".DisplayEntryPage"
+            android:name=".DisplayEntryActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
