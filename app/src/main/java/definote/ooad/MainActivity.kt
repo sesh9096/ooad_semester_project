@@ -12,32 +12,20 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import definote.ooad.ui.theme.MyApplicationTheme
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.flow.emptyFlow
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 class MainActivity : ComponentActivity() {
     val viewModel by viewModels<EntryListViewModel>(
@@ -78,9 +66,9 @@ class MainActivity : ComponentActivity() {
                                         // TODO: Make edit activity work and launch here
                                         Intent(
                                             applicationContext,
-                                            DisplayEntryPage::class.java
+                                            DisplayEntryActivity::class.java
                                         ).also {
-                                            it.putExtra("ENTRY_OBJECT", Entry(name = "hello", description = "desc", part = "n"))
+                                            it.putExtra("ENTRY_OBJECT", Entry(name = state.searchText, description = "", part = "n."))
                                             startActivity(it)
                                         }
                                     }
@@ -91,7 +79,7 @@ class MainActivity : ComponentActivity() {
                             items(state.entries) {entry->
                                 Row(
                                     Modifier.fillMaxWidth().clickable{
-                                        Intent(applicationContext, DisplayEntryPage::class.java).also{
+                                        Intent(applicationContext, DisplayEntryActivity::class.java).also{
                                             it.putExtra("ENTRY_OBJECT", entry)
                                             startActivity(it)
                                         }
@@ -117,7 +105,7 @@ class MainActivity : ComponentActivity() {
         }
     }
     private fun navigateToDisplayEntryPage(entry: Entry) {
-         Intent(applicationContext, DisplayEntryPage::class.java).also{
+         Intent(applicationContext, DisplayEntryActivity::class.java).also{
             it.putExtra("ENTRY_OBJECT", entry)
             startActivity(it)
         }
