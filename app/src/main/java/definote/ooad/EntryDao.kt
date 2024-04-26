@@ -3,6 +3,7 @@ package definote.ooad
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.RawQuery
 import androidx.sqlite.db.SupportSQLiteQuery
@@ -32,9 +33,10 @@ interface EntryDao {
     @Insert
     suspend fun insertAll(vararg entries: Entry)
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(entry: Entry)
 
     @Delete
     suspend fun delete(entry: Entry)
+
 }

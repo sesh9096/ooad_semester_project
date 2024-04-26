@@ -43,9 +43,6 @@ class MainActivity : ComponentActivity() {
             MyApplicationTheme {
                 Surface(color = MaterialTheme.colorScheme.background) {
                     val state by viewModel.state.collectAsState()
-                    var searchStrategy by remember {
-                        mutableStateOf(SimpleFilterStrategy(applicationContext))
-                    }
                     Column {
                         Row(
                             modifier = Modifier.fillMaxWidth()
@@ -62,7 +59,7 @@ class MainActivity : ComponentActivity() {
                         LazyColumn {
                             item{
                                 Row(
-                                    Modifier.fillMaxWidth().clickable {
+                                    Modifier.padding(vertical = 10.dp, horizontal = 10.dp).fillMaxWidth().clickable {
                                         // TODO: Make edit activity work and launch here
                                         Intent(
                                             applicationContext,
@@ -78,24 +75,14 @@ class MainActivity : ComponentActivity() {
                             }
                             items(state.entries) {entry->
                                 Row(
-                                    Modifier.fillMaxWidth().clickable{
+                                    Modifier.fillMaxWidth().padding(horizontal = 10.dp, vertical = 10.dp).clickable{
                                         Intent(applicationContext, DisplayEntryActivity::class.java).also{
                                             it.putExtra("ENTRY_OBJECT", entry)
                                             startActivity(it)
                                         }
                                     }
                                 ){
-                                    /*Text(
-                                        text = entry.name,
-                                        fontSize = 20.sp,
-                                    )
-                                    Text(
-                                        text = entry.description,
-                                        modifier = modifier,
-                                        fontSize = 10.sp,
-                                    )
-                                    */
-                                    Text(entry.name)
+                                    Text("${entry.name}(${entry.part})")
                                 }
                             }
                         }

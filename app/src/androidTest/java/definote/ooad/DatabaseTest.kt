@@ -1,6 +1,7 @@
 package definote.ooad
 
-import androidx.test.platform.app.InstrumentationRegistry
+import android.content.Context
+import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
@@ -20,7 +21,7 @@ class DatabaseTest {
     @Test
     fun databaseIsSingleton() {
         // Context of the app under test.
-        val appContext = InstrumentationRegistry.getInstrumentation().targetContext
+        val appContext = getApplicationContext() as Context
         val db1 = AppDatabase.getInstance(appContext)
         val db2 = AppDatabase.getInstance(appContext)
         assertEquals("Database is not a singleton", db1, db2)
@@ -29,12 +30,13 @@ class DatabaseTest {
     @Test
     fun addAddGetRemove() {
         // Context of the app under test.
-        val appContext = InstrumentationRegistry.getInstrumentation().targetContext
+        val appContext = getApplicationContext() as Context
         val dao = AppDatabase.getInstance(appContext).entryDao()
         val name = "asdfghjkl"
         val description = "blah blah blah"
         val part = "part"
-        val entry = Entry(name = name, description = description, part = part)
+        val uid =  999999999
+        val entry = Entry(uid = uid, name = name, description = description, part = part)
         runBlocking {
             dao.insert(entry)
             val entryRet = dao.searchByNameExact(name).first()[0]
@@ -43,8 +45,8 @@ class DatabaseTest {
             assertEquals("Entry names should be the same", entry.name, entryRet.name)
             assertEquals("Entry descriptions should be the same", entry.description, entryRet.description)
             dao.delete(entryRet)
-            val entryRet2 = dao.searchByNameExact(name)
-            assertNull("Entry should have been deleted", entryRet2)
+            val entryRet2 = dao.searchByNameExact(name).first()
+            assertEquals("Entry should have been deleted", emptyList<Entry>(), entryRet2)
         }
     }
 }
