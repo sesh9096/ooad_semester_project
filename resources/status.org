@@ -66,8 +66,6 @@ EntryFactory --> Entry
 
 #+RESULTS:
 [[file:class-diagram.png]]
-
-
 # | Builder   | A pattern to incrementally build complex objects                                     |
 # | Factory   | Constructs objects without specifying the exact type                                 |
 # | Observer  | Allows external observers to be notified of changes internal to the observable class |
