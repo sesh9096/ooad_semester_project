@@ -2,16 +2,27 @@ package definote.ooad
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -21,8 +32,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import definote.ooad.ui.theme.MyApplicationTheme
@@ -38,51 +54,119 @@ class MainActivity : ComponentActivity() {
         }
     )
     override fun onCreate(savedInstanceState: Bundle?) {
+        val context = this
         super.onCreate(savedInstanceState)
         setContent {
             MyApplicationTheme {
                 Surface(color = MaterialTheme.colorScheme.background) {
                     val state by viewModel.state.collectAsState()
+                    var expanded by remember {mutableStateOf(false) } // we don't care about this surviving config changes
                     Column {
-                        Row(
+                        Box(
                             modifier = Modifier.fillMaxWidth()
                         ) {
                             TextField(
                                 value = state.searchText,
                                 onValueChange = {searchText:String -> viewModel.search(searchText)},
-                                modifier = Modifier
-                                    .padding(horizontal = 3.dp)
-                                    .weight(10F),
-                                label = { Text("Search") }
+                                modifier = Modifier.fillMaxWidth(),
+                                label = { Text(text = "Search") },
                             )
+                            Box(
+                                 modifier = Modifier.fillMaxWidth()
+                                     .wrapContentSize(Alignment.TopEnd)
+                            ) {
+                                IconButton(
+                                    onClick = { expanded = !expanded },
+                                    modifier = Modifier.align(Alignment.TopEnd)
+                                ) {
+                                    Icon(
+                                            imageVector = Icons.Default.Menu,
+                                            contentDescription = "More",
+                                            modifier = Modifier.align(Alignment.Center)
+                                        )
+                                }
+
+                                DropdownMenu(
+                                    expanded = expanded,
+                                    onDismissRequest = { expanded = false },
+                                    ) {
+                                    state.strategies.forEach { strategy: String ->
+                                        DropdownMenuItem(
+                                            text = {
+                                                Text(
+                                                    text = strategy,
+                                                    fontStyle = if (strategy == state.selectedStrategy) {FontStyle.Italic} else {FontStyle.Normal}
+                                                )
+                                                   },
+                                            onClick = {
+                                                expanded = false
+                                                viewModel.setStrategy(strategy)
+                                                Toast.makeText(context, "Using strategy ${strategy}", Toast.LENGTH_SHORT).show()
+                                            })
+                                    }
+                                }
+                            }
                         }
-                        LazyColumn {
+                        LazyColumn() {
                             item{
                                 Row(
-                                    Modifier.padding(vertical = 10.dp, horizontal = 10.dp).fillMaxWidth().clickable {
-                                        // TODO: Make edit activity work and launch here
-                                        Intent(
-                                            applicationContext,
-                                            DisplayEntryActivity::class.java
-                                        ).also {
-                                            it.putExtra("ENTRY_OBJECT", Entry(name = state.searchText, description = "", part = "n."))
-                                            startActivity(it)
+                                    Modifier
+                                        .fillMaxWidth()
+                                        .clickable {
+                                            // TODO: Make edit activity work and launch here
+                                            Intent(
+                                                applicationContext,
+                                                DisplayEntryActivity::class.java
+                                            ).also {
+                                                it.putExtra(
+                                                    "ENTRY_OBJECT",
+                                                    Entry(
+                                                        name = state.searchText,
+                                                        description = "",
+                                                        part = "n."
+                                                    )
+                                                )
+                                                startActivity(it)
+                                            }
                                         }
-                                    }
                                 ) {
-                                    Text(text = "Add New entry")
+                                    Text(
+                                        text = "Add New entry",
+                                        fontSize = 20.sp,
+                                        modifier = Modifier
+                                            .padding(vertical = 10.dp, horizontal = 10.dp)
+                                    )
                                 }
                             }
                             items(state.entries) {entry->
                                 Row(
-                                    Modifier.fillMaxWidth().padding(horizontal = 10.dp, vertical = 10.dp).clickable{
-                                        Intent(applicationContext, DisplayEntryActivity::class.java).also{
-                                            it.putExtra("ENTRY_OBJECT", entry)
-                                            startActivity(it)
+                                    Modifier
+                                        .fillMaxWidth()
+                                        .clickable {
+                                            Intent(
+                                                applicationContext,
+                                                DisplayEntryActivity::class.java
+                                            ).also {
+                                                it.putExtra("ENTRY_OBJECT", entry)
+                                                startActivity(it)
+                                            }
                                         }
-                                    }
                                 ){
-                                    Text("${entry.name}(${entry.part})")
+                                    Text(
+                                        text = "${entry.name}(${entry.part})",
+                                        fontSize = 20.sp,
+                                        modifier = Modifier
+                                            .padding(vertical = 10.dp, horizontal = 10.dp)
+                                    )
+                                    Text(
+                                        text = entry.description,
+                                        fontSize = 20.sp,
+                                        fontStyle = FontStyle.Italic,
+                                        color = Color.Gray,
+                                        maxLines = 1,
+                                        modifier = Modifier
+                                            .padding(vertical = 10.dp, horizontal = 10.dp)
+                                    )
                                 }
                             }
                         }
