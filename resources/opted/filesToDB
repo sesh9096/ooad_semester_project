@@ -1,11 +1,13 @@
 #!/bin/sh
 
+{
 echo "CREATE TABLE IF NOT EXISTS Entry (uid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, name TEXT NOT NULL, description TEXT NOT NULL, part TEXT NOT NULL);"
 echo "INSERT INTO Entry (name, part, description)"
 echo "VALUES"
 
-iconv -f utf-8 -t utf-8 -c files/* | ./columns.sed
+curl $(cat ./links.txt) | iconv -f utf-8 -t utf-8 -c  | ./columns.sed
 # for file in ./files/*; do 
     # sed "/^<P>/!d;s/;/\\\;/g;s/'/''/g;s/--/\\--/g; s/<P><B>\(.\+\)<\/B> (<I>\(.*\)<\/I>) \(.*\)<\/P>/\t('\1', '\2', '\3'),/" $file
 # done
 echo "('OPTED', 'n.', 'The Online Plain Text English Dictionary used to generate this database');"
+} | sqlite3 appdata.db
