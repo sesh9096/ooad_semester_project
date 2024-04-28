@@ -3,6 +3,7 @@ package definote.ooad
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
@@ -18,14 +19,17 @@ import org.junit.Assert.*
 class FilterStrategyTests {
     @Test
     fun filtersNamed() {
-        val appContext = getApplicationContext() as Context
+        val appContext = InstrumentationRegistry.getInstrumentation().targetContext
         val simpleStrategy = SimpleFilterStrategy(appContext)
         val exactStrategy = ExactFilterStrategy(appContext)
         val fuzzyStrategy = FuzzyFilterStrategy(appContext)
+        assertEquals("simple", simpleStrategy.getDisplayName())
+        assertEquals("exact", exactStrategy.getDisplayName())
+        assertEquals("fuzzy", fuzzyStrategy.getDisplayName())
     }
     @Test
     fun filtersWork(){
-        val appContext = getApplicationContext() as Context
+        val appContext = InstrumentationRegistry.getInstrumentation().targetContext
         val simpleStrategy = SimpleFilterStrategy(appContext)
         val exactStrategy = ExactFilterStrategy(appContext)
         val fuzzyStrategy = FuzzyFilterStrategy(appContext)

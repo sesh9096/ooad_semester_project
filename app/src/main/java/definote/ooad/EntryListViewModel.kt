@@ -46,6 +46,7 @@ class EntryListViewModel(context: Context) : ViewModel () {
             strategies = strategies.map { it.getDisplayName() },
             selectedStrategy = strategies[0].getDisplayName() ))
     fun search(searchText:String){
+        Log.d("searching for", searchText)
         viewModelScope.launch {
             _searchText.update {
                 searchText

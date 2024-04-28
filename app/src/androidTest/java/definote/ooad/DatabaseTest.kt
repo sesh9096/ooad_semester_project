@@ -3,6 +3,7 @@ package definote.ooad
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 
@@ -21,7 +22,7 @@ class DatabaseTest {
     @Test
     fun databaseIsSingleton() {
         // Context of the app under test.
-        val appContext = getApplicationContext() as Context
+        val appContext = InstrumentationRegistry.getInstrumentation().targetContext
         val db1 = AppDatabase.getInstance(appContext)
         val db2 = AppDatabase.getInstance(appContext)
         assertEquals("Database is not a singleton", db1, db2)
@@ -30,7 +31,7 @@ class DatabaseTest {
     @Test
     fun canAddGetRemove() {
         // Context of the app under test.
-        val appContext = getApplicationContext() as Context
+        val appContext = InstrumentationRegistry.getInstrumentation().targetContext
         val dao = AppDatabase.getInstance(appContext).entryDao()
         // The stupid names are because the database is a singleton which may contain other entries.
         val name1 = "asdfghjkl"

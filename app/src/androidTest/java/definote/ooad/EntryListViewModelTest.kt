@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
@@ -30,7 +31,7 @@ class EntryListViewModelTest {
     fun searchChanges() {
         // Context of the app under test.
         Log.d("View Model Test", "Creating view model")
-        val appContext = ApplicationProvider.getApplicationContext() as Context
+        val appContext = InstrumentationRegistry.getInstrumentation().targetContext
         val viewModel = EntryListViewModel(context = appContext)
         // cold flow must have observer
         TestScope().backgroundScope.launch(UnconfinedTestDispatcher()) {
@@ -47,6 +48,7 @@ class EntryListViewModelTest {
             Log.d("View Model Test", "finished testing")
         }
     }
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun strategyChanges() {
         // Context of the app under test.
