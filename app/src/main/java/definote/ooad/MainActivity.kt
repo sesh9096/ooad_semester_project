@@ -37,6 +37,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
@@ -91,18 +92,36 @@ class MainActivity : ComponentActivity() {
                                     onDismissRequest = { expanded = false },
                                     ) {
                                     state.strategies.forEach { strategy: String ->
-                                        DropdownMenuItem(
-                                            text = {
-                                                Text(
-                                                    text = strategy,
-                                                    fontStyle = if (strategy == state.selectedStrategy) {FontStyle.Italic} else {FontStyle.Normal}
-                                                )
-                                                   },
-                                            onClick = {
-                                                expanded = false
-                                                viewModel.setStrategy(strategy)
-                                                Toast.makeText(context, "Using strategy ${strategy}", Toast.LENGTH_SHORT).show()
-                                            })
+                                        if (strategy == state.selectedStrategy) {
+                                            DropdownMenuItem(
+                                                text = { Text(
+                                                        text = strategy,
+                                                        fontStyle = FontStyle.Italic,
+                                                        fontWeight = FontWeight.Bold,
+                                                    ) },
+                                                onClick = {
+                                                   expanded = false
+                                                   Toast.makeText(context, "Already using strategy ${strategy}", Toast.LENGTH_SHORT).show()
+                                                })
+                                        } else {
+                                            DropdownMenuItem(
+                                                text = {
+                                                    Text(
+                                                        text = strategy,
+                                                        fontStyle = FontStyle.Normal,
+                                                        fontWeight = FontWeight.Light,
+                                                    )
+                                                },
+                                                onClick = {
+                                                    expanded = false
+                                                    viewModel.setStrategy(strategy)
+                                                    Toast.makeText(
+                                                        context,
+                                                        "Using strategy ${strategy}",
+                                                        Toast.LENGTH_SHORT
+                                                    ).show()
+                                                })
+                                        }
                                     }
                                 }
                             }
