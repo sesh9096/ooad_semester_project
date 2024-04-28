@@ -22,20 +22,21 @@ Sean's portion of the presentation is located at
 [[https://drive.google.com/file/d/1MmushJyZLlFWV2vwBFwLi_pSYTJPo0VA/view?usp=sharing][https://drive.google.com/file/d/1MmushJyZLlFWV2vwBFwLi_pSYTJPo0VA/view?usp=sharing]]
 
 - Team Members: Sean Shi, Jack Paulman
-- Frameworks/Libraries: Android Libraries(SQLite database)
+- Frameworks/Libraries: Android Libraries(SQLite database/Room, Jetpack Compose, etc)
 - BDD Scenarios under =app/src/test/resources/=
 
 * Features
 ** Functional Elements
 - [X] Search: Allow the user to search through entries to find what they need, use the Strategy pattern for different algorithms.
-- [ ] Database/Dictionary: SQLite
+- [X] Database/Dictionary: SQLite
 - [X] +Display+ Activity: Screen to display user input
-- [ ] Text Renderer: Allow the user to view database entries, perform syntax highlighting, emphasis markers, etc.
-- [ ] Menu: Recent searches, adding new dictionaries
+- [X] Text Renderer: Allow the user to view database entries, name, description etc.
+- +[-] Menu: Recent searches, adding new dictionaries+
 - [ ] Editor: edit entries or add your own entries to the database in a custom dictionary
 ** Design Patterns (May include others as needed)
-- [ ] Builder: Build a dictionary from a text file or something similar
-- [ ] Factory: Create dictionary entries
-- [ ] Strategy: Sorting/searching methods for finding entries
-- [ ] Singleton: Single instance of the database
-- [ ] Observer: Can be used for logging and to send notifications for interesting events
+- +[ ] Builder: Build a dictionary from a text file or something similar+
+- [X] Factory: Create dictionary entries
+- [X] Strategy: Sorting/searching methods for finding entries
+- [X] Singleton: Single instance of the database
+- [X] MVVM(Model, View, ViewModel): model for ui
+- +[ ] Observer: Can be used for logging and to send notifications for interesting events+
