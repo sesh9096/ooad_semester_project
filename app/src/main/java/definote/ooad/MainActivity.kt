@@ -16,9 +16,8 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -36,8 +35,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
@@ -73,7 +74,8 @@ class MainActivity : ComponentActivity() {
                                 label = { Text(text = "Search") },
                             )
                             Box(
-                                 modifier = Modifier.fillMaxWidth()
+                                 modifier = Modifier
+                                     .fillMaxWidth()
                                      .wrapContentSize(Alignment.TopEnd)
                             ) {
                                 IconButton(
@@ -183,9 +185,19 @@ class MainActivity : ComponentActivity() {
                                         fontStyle = FontStyle.Italic,
                                         color = Color.Gray,
                                         maxLines = 1,
+                                        softWrap = false,
+                                        overflow = TextOverflow.Ellipsis,
                                         modifier = Modifier
                                             .padding(vertical = 10.dp, horizontal = 10.dp)
+                                            .weight(5F)
                                     )
+                                    IconButton(
+                                        onClick = {viewModel.deleteEntry(entry)},
+                                    ) {
+                                        Icon(imageVector = Icons.Default.Delete,
+                                            contentDescription = "delete ${entry.name}",
+                                        )
+                                    }
                                 }
                             }
                         }

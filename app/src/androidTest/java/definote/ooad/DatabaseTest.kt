@@ -28,25 +28,34 @@ class DatabaseTest {
         assertNotNull("Database should not be null", db1)
     }
     @Test
-    fun addAddGetRemove() {
+    fun canAddGetRemove() {
         // Context of the app under test.
         val appContext = getApplicationContext() as Context
         val dao = AppDatabase.getInstance(appContext).entryDao()
-        val name = "asdfghjkl"
+        // The stupid names are because the database is a singleton which may contain other entries.
+        val name1 = "asdfghjkl"
+        val name2 = "asdfghjklqwertyuiop"
         val description = "blah blah blah"
         val part = "part"
-        val uid =  999999999
-        val entry = Entry(uid = uid, name = name, description = description, part = part)
+        val uid1 =  999999998
+        val uid2 =  999999999
+        val entry1 = Entry(uid = uid1, name = name1, description = description, part = part)
+        val entry2 = Entry(uid = uid2, name = name2, description = description, part = part)
         runBlocking {
-            dao.insert(entry)
-            val entryRet = dao.searchByNameExact(name).first()[0]
-            assertNotNull("Entry should not be null", entryRet)
+            dao.insert(entry1)
+            dao.insert(entry2)
+            val entryRetListExact = dao.searchByNameExact(name1).first()
+            val entryRetList = dao.searchByName(name1).first()
+            val entry1Ret = entryRetListExact[0]
+            assertEquals("There should be 1 exact match",1, entryRetListExact.size)
+            assertEquals("There should be 2 similar matches",2, entryRetList.size)
             // these may not have the same id because that is taken care of by db
-            assertEquals("Entry names should be the same", entry.name, entryRet.name)
-            assertEquals("Entry descriptions should be the same", entry.description, entryRet.description)
-            dao.delete(entryRet)
-            val entryRet2 = dao.searchByNameExact(name).first()
-            assertEquals("Entry should have been deleted", emptyList<Entry>(), entryRet2)
+            assertEquals("Entries should be the same", entry1, entry1Ret)
+            assertEquals("Entry with the same ID should have been returned", entry1, dao.findByID(uid1))
+            dao.delete(entry1Ret)
+            dao.delete(entry2)
+            val entryRetAfter = dao.searchByNameExact(name1).first()
+            assertEquals("Entry should have been deleted", emptyList<Entry>(), entryRetAfter)
         }
     }
 }

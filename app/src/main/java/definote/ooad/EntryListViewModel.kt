@@ -11,15 +11,16 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class EntryListViewModel(context: Context) : ViewModel () {
-    private val strategies = listOf<FilterStrategy>(
+    private val entryDao = AppDatabase.getInstance(context).entryDao()
+    private val strategies = listOf(
         SimpleFilterStrategy(context = context),
-        ExactFilterStrategy(context = context)
+        ExactFilterStrategy(context = context),
+        FuzzyFilterStrategy(context = context),
     )
     private var selectedStrategy : FilterStrategy = strategies[0]
     private val _state = MutableStateFlow(EntryListState(strategies = strategies.map { it.getDisplayName() }))
@@ -28,7 +29,7 @@ class EntryListViewModel(context: Context) : ViewModel () {
     private val _entries = _searchText.flatMapLatest {
         if(it == ""){
             // This could also be implemented in strategies
-            flowOf(emptyList<Entry>())
+            flowOf(emptyList())
         }else{
             selectedStrategy.getEntries(it)
         }
@@ -39,7 +40,11 @@ class EntryListViewModel(context: Context) : ViewModel () {
             selectedStrategy = selectedStrategy.getDisplayName(),
             searchText = searchText
         )
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), EntryListState())
+    }.stateIn(viewModelScope,
+        SharingStarted.WhileSubscribed(5000),
+        EntryListState(
+            strategies = strategies.map { it.getDisplayName() },
+            selectedStrategy = strategies[0].getDisplayName() ))
     fun search(searchText:String){
         viewModelScope.launch {
             _searchText.update {
@@ -59,6 +64,11 @@ class EntryListViewModel(context: Context) : ViewModel () {
                 Log.d("EntryListViewModel:", "Searching for $searchText using strategy $strategyName")
                 searchText
             }
+        }
+    }
+    fun deleteEntry(entry: Entry){
+        viewModelScope.launch {
+            entryDao.delete(entry)
         }
     }
 }
