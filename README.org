@@ -23,7 +23,7 @@ Sean's portion of the presentation is located at
 
 - Team Members: Sean Shi, Jack Paulman
 - Frameworks/Libraries: Android Libraries(SQLite database/Room, Jetpack Compose, etc)
-- BDD Scenarios under =app/src/test/resources/=
+- BDD Scenarios under =app/src/androidTest/assets/features/=
 
 * Features
 ** Functional Elements
@@ -40,3 +40,6 @@ Sean's portion of the presentation is located at
 - [X] Singleton: Single instance of the database
 - [X] MVVM(Model, View, ViewModel): model for ui
 - +[ ] Observer: Can be used for logging and to send notifications for interesting events+
+
+* UML
+[[file:resources/class-diagram.png][uml-diagram]]
