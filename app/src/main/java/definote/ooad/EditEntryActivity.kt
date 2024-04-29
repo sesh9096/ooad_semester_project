@@ -5,7 +5,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -43,9 +42,9 @@ class EditEntryActivity : ComponentActivity() {
                         modifier = Modifier.padding(16.dp)
                     ) {
                         // State variables to hold the text in each search bar
-                        var nameSearchText by remember { mutableStateOf("") }
-                        var partOfSpeechSearchText by remember { mutableStateOf("") }
-                        var descriptionSearchText by remember { mutableStateOf("") }
+                        var nameSearchText by remember { mutableStateOf(entry.name)}
+                        var partOfSpeechSearchText by remember { mutableStateOf(entry.part) }
+                        var descriptionSearchText by remember { mutableStateOf(entry.description) }
 
                         // Search bar for name
                         TextField(
@@ -75,18 +74,6 @@ class EditEntryActivity : ComponentActivity() {
                         }) {
                             Text(text = "Enter to database")
                         }
-
-                        Row {
-                            Text (
-                                text = entry.name
-                            )
-                            Text (
-                                text = " (${entry.part})"
-                            )
-                        }
-                        Text (
-                            text = entry.description
-                        )
                     }
                 }
             }
