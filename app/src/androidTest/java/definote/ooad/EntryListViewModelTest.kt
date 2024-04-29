@@ -43,7 +43,7 @@ class EntryListViewModelTest {
             val searchText = "asdfghjklqwertyuiop"
             viewModel.search(searchText)
             // Hopefully avoid concurrency issues where search text has not updated yet
-            delay(100)
+            delay(200)
             assertEquals("Search text should be updated",searchText, viewModel.state.value.searchText)
             Log.d("View Model Test", "finished testing")
         }
@@ -64,8 +64,36 @@ class EntryListViewModelTest {
             assertEquals("Initial strategy should be the first one",strategies[0],viewModel.state.value.selectedStrategy)
             viewModel.setStrategy(strategies[1])
             // Hopefully avoid concurrency issues where search text has not updated yet
-            delay(100)
+            delay(200)
             assertEquals("Strategy should be updated",strategies[1], viewModel.state.value.selectedStrategy)
+        }
+    }
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun searchingNothingGivesUsNothing() {
+        // Context of the app under test.
+        Log.d("View Model Test", "Creating view model")
+        val appContext = InstrumentationRegistry.getInstrumentation().targetContext
+        val viewModel = EntryListViewModel(context = appContext)
+        // cold flow must have observer
+        TestScope().backgroundScope.launch(UnconfinedTestDispatcher()) {
+            viewModel.state.collect {}
+        }
+        runBlocking {
+            val dao = AppDatabase.getInstance(appContext).entryDao()
+            val entry = Entry(1000023456, "name", "desc", "part")
+            dao.insert(entry)
+            viewModel.search("name")
+            delay(200)
+            assertNotEquals(emptyList<Entry>(), viewModel.state.value.entries.size)
+            val searchText = ""
+            viewModel.search(searchText)
+            // Hopefully avoid concurrency issues where search text has not updated yet
+            delay(200)
+            assertEquals("Search text should be updated",searchText, viewModel.state.value.searchText)
+            assertEquals(0, viewModel.state.value.entries.size)
+            Log.d("View Model Test", "finished testing")
+            dao.delete(entry)
         }
     }
 }
