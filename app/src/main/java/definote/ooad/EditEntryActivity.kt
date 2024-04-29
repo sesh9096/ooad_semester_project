@@ -72,10 +72,7 @@ class EditEntryActivity : ComponentActivity() {
                         )
                         Button(onClick = {
                             addEntryToDB(nameSearchText, partOfSpeechSearchText, descriptionSearchText, entry)
-                            Intent(applicationContext, MainActivity::class.java).also {
-                                it.putExtra("ENTRY_OBJECT", entry)
-                                startActivity(it)
-                            }
+                            finish()
                         }) {
                             Text(text = "Save")
                         }

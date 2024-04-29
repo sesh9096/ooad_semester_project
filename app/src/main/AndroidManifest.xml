@@ -17,6 +17,7 @@
             android:exported="false" />
         <activity
             android:name=".DisplayEntryActivity"
+            android:noHistory="true"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
