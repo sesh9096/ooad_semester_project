@@ -1,5 +1,6 @@
 package definote.ooad
 
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -71,8 +72,12 @@ class EditEntryActivity : ComponentActivity() {
                         )
                         Button(onClick = {
                             addEntryToDB(nameSearchText, partOfSpeechSearchText, descriptionSearchText, entry)
+                            Intent(applicationContext, MainActivity::class.java).also {
+                                it.putExtra("ENTRY_OBJECT", entry)
+                                startActivity(it)
+                            }
                         }) {
-                            Text(text = "Enter to database")
+                            Text(text = "Save")
                         }
                     }
                 }
