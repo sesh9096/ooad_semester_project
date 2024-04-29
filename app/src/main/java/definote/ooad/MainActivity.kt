@@ -34,8 +34,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -137,7 +135,7 @@ class MainActivity : ComponentActivity() {
                                             // TODO: Make edit activity work and launch here
                                             Intent(
                                                 applicationContext,
-                                                DisplayEntryActivity::class.java
+                                                EditEntryActivity::class.java
                                             ).also {
                                                 it.putExtra(
                                                     "ENTRY_OBJECT",
