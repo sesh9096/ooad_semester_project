@@ -22,11 +22,11 @@ import androidx.compose.ui.unit.dp
 import definote.ooad.ui.theme.MyApplicationTheme
 
 class EditEntryActivity : ComponentActivity() {
-    fun addEntryToDB(name: String, description: String, part: String) {
+    fun addEntryToDB(name: String, description: String, part: String, entry: Entry) {
         val entryDao = AppDatabase.getInstance(applicationContext).entryDao()
         val entryFactory = EntryFactory(entryDao)
         println("Insert")
-        entryFactory.generateAndAddEntry(name, part, description)
+        entryFactory.generateAndAddEntry(name, part, description, entry)
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         val entry = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -70,7 +70,7 @@ class EditEntryActivity : ComponentActivity() {
                             modifier = Modifier.fillMaxWidth()
                         )
                         Button(onClick = {
-                            addEntryToDB(nameSearchText, partOfSpeechSearchText, descriptionSearchText)
+                            addEntryToDB(nameSearchText, partOfSpeechSearchText, descriptionSearchText, entry)
                         }) {
                             Text(text = "Enter to database")
                         }

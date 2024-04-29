@@ -227,7 +227,7 @@ class MainActivity : ComponentActivity() {
         }
         return searchResult
     }
-    */
+
 
     private fun addTextToDB(text: String) {
         val entryDao = AppDatabase.getInstance(applicationContext).entryDao()
@@ -235,6 +235,7 @@ class MainActivity : ComponentActivity() {
         println("Insert")
         entryFactory.generateAndAddEntry("Test", text, "n")
     }
+    */
 }
 
 //@Composable
