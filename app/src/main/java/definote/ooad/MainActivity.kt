@@ -10,6 +10,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
@@ -58,7 +59,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MyApplicationTheme {
-                Surface(color = MaterialTheme.colorScheme.background) {
+                Surface(modifier = Modifier.fillMaxHeight(), color = MaterialTheme.colorScheme.background) {
                     val state by viewModel.state.collectAsState()
                     var expanded by remember {mutableStateOf(false) } // we don't care about this surviving config changes
                     Column {

@@ -6,6 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
@@ -22,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import definote.ooad.ui.theme.MyApplicationTheme
 
 class EditEntryActivity : ComponentActivity() {
-    fun addEntryToDB(name: String, part: String, description: String) {
+    fun addEntryToDB(name: String, description: String, part: String) {
         val entryDao = AppDatabase.getInstance(applicationContext).entryDao()
         val entryFactory = EntryFactory(entryDao)
         println("Insert")
@@ -37,7 +38,7 @@ class EditEntryActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MyApplicationTheme {
-                Surface(color = MaterialTheme.colorScheme.background) {
+                Surface(modifier = Modifier.fillMaxHeight(), color = MaterialTheme.colorScheme.background) {
                     Column(
                         modifier = Modifier.padding(16.dp)
                     ) {
@@ -80,7 +81,7 @@ class EditEntryActivity : ComponentActivity() {
                                 text = entry.name
                             )
                             Text (
-                                text = entry.part
+                                text = " (${entry.part})"
                             )
                         }
                         Text (

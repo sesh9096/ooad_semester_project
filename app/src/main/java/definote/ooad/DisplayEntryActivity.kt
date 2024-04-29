@@ -1,12 +1,15 @@
 package definote.ooad
 
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -24,18 +27,26 @@ class DisplayEntryActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MyApplicationTheme {
-                Surface(color = MaterialTheme.colorScheme.background) {
+                Surface(modifier = Modifier.fillMaxHeight(), color = MaterialTheme.colorScheme.background) {
                     Column {
-                        Row{
-                            Text (
+                        Row {
+                            Text(
                                 text = "${entry.name}(${entry.part})",
                                 fontSize = 30.sp,
                                 modifier = Modifier.fillMaxWidth()
                             )
                         }
-                        Text (
+                        Text(
                             text = entry.description
                         )
+                        Button(onClick = {
+                            Intent(applicationContext, EditEntryActivity::class.java).also {
+                                it.putExtra("ENTRY_OBJECT", entry)
+                                startActivity(it)
+                            }
+                        }) {
+                            Text(text = "Edit")
+                        }
                     }
                 }
             }
